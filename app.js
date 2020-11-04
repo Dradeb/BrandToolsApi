@@ -64,4 +64,4 @@ app.use('/Users', usersRoute);
 
 
 //Listening to server
-app.listen(3000);
+app.listen(process.env.PORT);
