@@ -16,7 +16,6 @@ mongoose.connect(process.env.DB_LOCAL_CONNECTION, { useNewUrlParser: true, useUn
     .catch(err => console.log(`Could not Connected to db ${process.env.DB_CONNECTION} `, err));
 
 
-
 // Storage
 const storage = new GridFsStorage({
     url: process.env.DB_LOCAL_CONNECTION,
@@ -40,7 +39,6 @@ const storage = new GridFsStorage({
 const upload = multer({
     storage
 });
-
 
 //  Allow form-data parsing
 app.use(bodyParser.json());

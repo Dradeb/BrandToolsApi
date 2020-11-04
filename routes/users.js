@@ -84,7 +84,7 @@ router.post('/Delete/:id', (req, res) => {
 });
 
 
-router.post('/allUsers/', (req, res) => {
+router.get('/allUsers/', (req, res) => {
 
     User.find({}).then(
         (data) => {
@@ -100,7 +100,7 @@ router.post('/allUsers/', (req, res) => {
 
 });
 
-router.post('/User/:id', (req, res) => {
+router.get('/User/:id', (req, res) => {
 
     User.findOne({ _id: req.params.id }).then(
         (data) => {
