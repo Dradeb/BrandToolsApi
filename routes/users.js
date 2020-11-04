@@ -116,6 +116,21 @@ router.get('/User/:id', (req, res) => {
 
 });
 
+router.post('/User/email/', (req, res) => {
+
+    User.findOne({ email: req.body.email }).then(
+        (data) => {
+            res.status(200).json(data);
+        }
+    ).catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );
+
+});
 
 
 module.exports = router;

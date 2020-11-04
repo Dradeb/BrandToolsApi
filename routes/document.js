@@ -62,7 +62,8 @@ module.exports = (upload) => {
                     }
 
                     const newDoc = new Document({
-                        name: req.body.name,
+                        _id: req.file.id,
+                        name: req.file.filename,
                         description: req.body.description,
                         tags: req.body.tags,
                         docType: req.body.docType
@@ -118,6 +119,19 @@ module.exports = (upload) => {
                     }
                 })
                 .catch(err => res.status(500).json(err));
+
+            gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
+                if (err) {
+                    return res.status(404).json({ err: err });
+                }
+
+                res.status(200).json({
+                    success: true,
+                    message: `File with ID ${req.params.id} is deleted`,
+                });
+            });
+
+
         });
 
     /*
@@ -160,7 +174,7 @@ module.exports = (upload) => {
                 }
 
                 files.map(file => {
-                    if (file.contentType === 'doc/jpeg' || file.contentType === 'doc/png' || file.contentType === 'doc/svg') {
+                    if (file.contentType === 'doc/jpeg' || file.contentType === 'doc/jpg' || file.contentType === 'doc/png' || file.contentType === 'doc/svg') {
                         file.isDocument = true;
                     } else {
                         file.isDocument = false;
@@ -193,7 +207,17 @@ module.exports = (upload) => {
                 });
             });
         });
-
+    router.route('/document/type/:type')
+        .get((req, res, next) => {
+            Document.find({ docType: req.params.type }, {}, {})
+                .then((doc) => {
+                    res.status(200).json({
+                        success: true,
+                        doc,
+                    });
+                })
+                .catch(err => res.status(500).json(err));
+        });
     /* 
         GET: Fetches a particular doc and render on browser
     */
@@ -207,7 +231,7 @@ module.exports = (upload) => {
                 });
             }
 
-            if (files[0].contentType === 'doc/jpeg' || files[0].contentType === 'doc/jpg' || files[0].contentType === 'doc/png' || files[0].contentType === 'doc/svg+xml') {
+            if (files[0]) {
                 // render doc to browser
                 console.log('a fiiileee');
                 gfs.openDownloadStreamByName(req.params.filename).pipe(res);

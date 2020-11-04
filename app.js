@@ -11,14 +11,14 @@ const GridFsStorage = require(('multer-gridfs-storage'));
 
 require('dotenv/config');
 //DB CONNECTION 
-mongoose.connect(process.env.DB_LOCAL_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("Connected to db"))
-    .catch(err => console.log(`Could not Connected to db ${process.env.DB_CONNECTION} `, err));
+    .catch(err => console.log(`Could not Connected to db ${process.env.MONGODB_URI} `, err));
 
 
 // Storage
 const storage = new GridFsStorage({
-    url: process.env.DB_LOCAL_CONNECTION,
+    url: process.env.MONGODB_URI,
     file: (req, file) => {
         return new Promise((resolve, reject) => {
             crypto.randomBytes(16, (err, buf) => {
@@ -39,6 +39,12 @@ const storage = new GridFsStorage({
 const upload = multer({
     storage
 });
+
+app.get("/", function(req, res) {
+    //when we get an http get request to the root/homepage
+    res.send("BPEDIA API ");
+});
+
 
 //  Allow form-data parsing
 app.use(bodyParser.json());
